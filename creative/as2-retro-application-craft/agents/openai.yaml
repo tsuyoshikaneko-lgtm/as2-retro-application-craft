@@ -1,0 +1,7 @@
+interface:
+  display_name: "AS2 Retro Craft"
+  short_description: "Design and review retro AS2/SWF apps"
+  default_prompt: "Use $as2-retro-application-craft to design a small ActionScript 2.0 / Flash 8 style application."
+
+policy:
+  allow_implicit_invocation: true

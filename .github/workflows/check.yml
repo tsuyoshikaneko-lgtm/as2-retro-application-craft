@@ -1,0 +1,93 @@
+name: check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  repo-shape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Reject committed SWF artifacts
+        run: |
+          if [ -n "$(git ls-files '*.swf')" ]; then
+            echo "Generated .swf files must not be committed."
+            git ls-files '*.swf'
+            exit 1
+          fi
+
+      - name: Check skill directory shape
+        run: |
+          test -f AGENTS.md
+          test -f CLAUDE.md
+          test -f creative/as2-retro-application-craft/SKILL.md
+          test -f creative/as2-retro-application-craft/agents/openai.yaml
+          test -f operations/as2-swf-debug-pipeline/SKILL.md
+          test -f operations/as2-swf-debug-pipeline/agents/openai.yaml
+          test -L .claude/skills/as2-retro-application-craft
+          test -L .claude/skills/as2-swf-debug-pipeline
+          test -f .claude/skills/as2-retro-application-craft/SKILL.md
+          test -f .claude/skills/as2-swf-debug-pipeline/SKILL.md
+          test -L .agents/skills/as2-retro-application-craft
+          test -L .agents/skills/as2-swf-debug-pipeline
+          test -f .agents/skills/as2-retro-application-craft/SKILL.md
+          test -f .agents/skills/as2-swf-debug-pipeline/SKILL.md
+
+          unexpected="$(
+            find creative/as2-retro-application-craft operations/as2-swf-debug-pipeline \
+              -maxdepth 1 \( -name README.md -o -name CHANGELOG.md \) -print
+          )"
+          if [ -n "$unexpected" ]; then
+            echo "Keep skill directories focused on SKILL.md, agents/, assets/, references/, and evals/."
+            echo "$unexpected"
+            exit 1
+          fi
+
+      - name: Check wrapper JavaScript syntax
+        run: node --check samples/boon-aa-threader/wrapper_config.js
+
+      - name: Build sample distribution
+        run: make dist
+
+      - name: Check generated distribution shape
+        run: |
+          test -s dist/boon-aa-threader/index.html
+          test -s dist/boon-aa-threader/wrapper_config.js
+          test -s dist/boon-aa-threader/boon-threader.swf
+          test -s dist/boon-aa-threader/aa-font.swf
+          test -s dist/boon-aa-threader/OFL.txt
+          file dist/boon-aa-threader/boon-threader.swf | grep "Macromedia Flash data"
+          file dist/boon-aa-threader/aa-font.swf | grep "Macromedia Flash data"
+
+      - name: Check trailing whitespace in tracked text files
+        run: |
+          python3 - <<'PY'
+          import pathlib
+          import subprocess
+          import sys
+
+          binary_suffixes = {
+              ".swf", ".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico",
+              ".pdf", ".zip", ".gz", ".tgz", ".wasm",
+          }
+          files = subprocess.check_output(["git", "ls-files"], text=True).splitlines()
+          errors = []
+
+          for name in files:
+              path = pathlib.Path(name)
+              if path.suffix.lower() in binary_suffixes:
+                  continue
+              try:
+                  lines = path.read_text(encoding="utf-8", errors="ignore").splitlines()
+              except OSError:
+                  continue
+              for line_no, line in enumerate(lines, 1):
+                  if line.endswith((" ", "\t")):
+                      errors.append(f"{name}:{line_no}: trailing whitespace")
+
+          if errors:
+              print("\n".join(errors))
+              sys.exit(1)
+          PY

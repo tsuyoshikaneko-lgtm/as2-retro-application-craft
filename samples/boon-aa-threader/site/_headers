@@ -1,0 +1,28 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+/
+  Content-Type: text/html; charset=utf-8
+  Cache-Control: public, max-age=60
+
+/*.html
+  Content-Type: text/html; charset=utf-8
+  Cache-Control: public, max-age=60
+
+/*.js
+  Content-Type: application/javascript; charset=utf-8
+  Cache-Control: public, max-age=300
+
+/*.swf
+  Content-Type: application/x-shockwave-flash
+  Cache-Control: public, max-age=300
+
+/*.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=3600
+
+/*.svg
+  Content-Type: image/svg+xml; charset=utf-8
+  Cache-Control: public, max-age=86400

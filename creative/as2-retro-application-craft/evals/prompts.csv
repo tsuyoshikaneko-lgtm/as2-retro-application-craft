@@ -1,0 +1,24 @@
+id,should_trigger,prompt,expected_behavior
+trigger-01,true,AS2で小さい診断ツール風SWFを作りたい。スマホからも見られる前提で設計して。,Use AS2 retro app planning and mobile viewer translation.
+trigger-02,true,このActionScript 2.0のコードを、当時Flash作ってた人目線でレビューして。,Apply former Flash creator lens and review constraints.
+trigger-03,true,Ruffleで昔っぽいSWF置き場HTMLを作って。中身はAS2で作る予定。,Generate plain wrapper and disclose Ruffle assumptions.
+trigger-04,true,AIにAS2を書かせるためのプロンプトを作って。AS3やJSに流れないようにしたい。,Use prompting guidelines and AS2 anti-drift clauses.
+trigger-05,true,Flash IDEでAS2の音ボタンアプリを作る手順をください。,Include Library sound linkage and attachSound guidance.
+trigger-06,true,スマホで見る人にもFlashっぽく感じるよう、PC時代の操作をタッチに翻訳したい。,Use mobile viewer translation reference.
+trigger-07,true,AS2の小さいギャラリーSWFを、TimelineとLibrary前提で設計してください。,Use AS2 authoring core and archetypes.
+no-trigger-01,false,昔のFlash風サイトをReactとCanvasで作りたい。,Do not trigger; modern stack is requested.
+no-trigger-02,false,Flash Player終了の歴史を説明して。,"Do not trigger; history only, no artifact design."
+no-trigger-03,false,AS3でAIRアプリを作るベストプラクティスを教えて。,Do not trigger; AS3/AIR are excluded.
+no-trigger-04,false,Y2KっぽいWebデザインの配色トレンドを教えて。,Do not trigger; generic retro styling.
+edge-01,true,既存SWFをRuffleで置くHTMLだけほしい。,"Trigger lightly for wrapper placement, avoid inventing AS2 internals."
+edge-02,false,スマホ用のカジュアルゲームをPixiJSで作りたい。,Do not trigger despite mobile/game; PixiJS requested.
+edge-03,true,AS2の診断ツールを作りたい。ゲームじゃないのでスコアや当たり判定はいらない。,Use generic frame-script skeleton; avoid one-button game snippet.
+edge-04,true,Flash IDEのtitle/main/resultフレームに置くAS2コードの分担を整理して。,Explain frame-script placement after stage instances exist.
+edge-05,true,SWFはこっちでPublishするので、Ruffleで見る前のチェックリストだけください。,Use publish and Ruffle smoke-check guidance.
+ops-01,true,MTASCでAS2をSWF化してRuffleで公開する手順を、make swfまで含めて作って。,Recognize and hand off to companion as2-swf-debug-pipeline skill for the MTASC publish how-to; do not implement compile/publish here.
+ops-02,true,make swfは通ったのにRuffleで古いSWFが出続ける。原因を切り分けて。,Recognize and hand off to companion as2-swf-debug-pipeline skill for the cache/wrapper debug ladder.
+ops-03,true,Ruffleで日本語AAが欠ける。MTASCビルド側でどう直す？,Recognize and hand off to companion as2-swf-debug-pipeline skill for font-source SWF guidance.
+no-trigger-05,false,AdobeFlexでAS3の業務ダッシュボードを作りたい。,Do not trigger; Flex/AS3 are excluded.
+no-trigger-06,false,医療現場の本番ツールをアクセシビリティ最優先で作りたい。,Do not trigger; accessibility-critical production app is out of scope for AS2/SWF.
+no-trigger-07,false,Flashの思い出を語るノスタルジー記事だけ書きたい。成果物はいらない。,Do not trigger; nostalgia essay with no artifact or wrapper.
+edge-06,true,Flash終了の歴史を踏まえて、それを題材にした小さいAS2のSWFを設計したい。,Trigger; history leads to an AS2 artifact not an essay.

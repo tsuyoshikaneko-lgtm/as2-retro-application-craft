@@ -1,0 +1,59 @@
+#!/bin/sh
+set -eu
+
+OUT="${1:-samples/boon-aa-threader/aa-font.swf}"
+SRC_DIR="$(dirname "$OUT")"
+FONT_DIR="/tmp/as2-retro-font"
+FONT_FILE="$FONT_DIR/NotoSansCJKjp-Regular.otf"
+FONT_XML="$FONT_DIR/aa-font.xml"
+# Pinned to an immutable commit, not a moving branch. The file has not changed
+# since 2021-04-30; pinning the commit keeps the SHA256 check from breaking when
+# the noto-cjk default branch is updated. Verify both the commit and the SHA256
+# if you bump the font.
+FONT_COMMIT="165c01b46ea533872e002e0785ff17e44f6d97d8"
+FONT_URL="https://raw.githubusercontent.com/notofonts/noto-cjk/${FONT_COMMIT}/Sans/OTF/Japanese/NotoSansCJKjp-Regular.otf"
+FONT_SHA256="68a3fc98800b2a27b371f2fb79991daf3633bd89309d4ffaa6946fd587f375b5"
+
+# The glyph set is DERIVED from the source string literals instead of being
+# hand-maintained. A hand-kept glyph list silently drops glyphs whenever a new
+# comment string is added; deriving it from source removes that whole failure
+# class. Any character that appears in these sources gets embedded.
+GLYPH_SOURCES="$SRC_DIR/mtasc/src/BoonThreader.as $SRC_DIR/frame_scripts.as"
+
+mkdir -p "$FONT_DIR"
+curl -fsSL "$FONT_URL" -o "$FONT_FILE"
+echo "$FONT_SHA256  $FONT_FILE" | sha256sum -c -
+
+# Base ASCII set as insurance, plus every printable character used by the
+# sources. Control characters are dropped and the result is de-duplicated.
+BASE='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 !#$%&'"'"'()*+,-./:;<=>?@[]_{|}~'
+COLLECTED=""
+for s in $GLYPH_SOURCES; do
+    if [ -f "$s" ]; then
+        COLLECTED="$COLLECTED$(cat "$s")"
+    fi
+done
+
+GLYPHS=$(
+    printf '%s%s' "$BASE" "$COLLECTED" \
+        | LC_ALL=C.UTF-8 grep -o . \
+        | LC_ALL=C.UTF-8 grep -v '[[:cntrl:]]' \
+        | LC_ALL=C.UTF-8 sort -u \
+        | tr -d '\n'
+)
+
+# XML-escape for use inside a double-quoted attribute value.
+GLYPHS_ESC=$(printf '%s' "$GLYPHS" | sed -e 's/&/\&amp;/g' -e 's/</\&lt;/g' -e 's/>/\&gt;/g' -e 's/"/\&quot;/g')
+
+{
+    printf '<?xml version="1.0" encoding="UTF-8"?>\n'
+    printf '<movie width="1" height="1" framerate="1">\n'
+    printf '  <background color="#ffffff"/>\n'
+    printf '  <frame>\n'
+    printf '    <font id="Noto Sans CJK JP" import="%s" glyphs="%s"/>\n' "$FONT_FILE" "$GLYPHS_ESC"
+    printf '  </frame>\n'
+    printf '</movie>\n'
+} > "$FONT_XML"
+
+mkdir -p "$(dirname "$OUT")"
+swfmill simple "$FONT_XML" "$OUT"

@@ -1,0 +1,16 @@
+.DS_Store
+**/.DS_Store
+node_modules/
+*.log
+
+# Generated Flash/Ruffle release artifacts.
+# Build locally or in CI with `make swf` / `make dist`; do not commit them.
+samples/**/*.swf
+samples/**/ruffle/
+dist/
+public/
+.wrangler/
+
+# Local Claude Code settings/notes.
+CLAUDE.local.md
+.claude/settings.local.json

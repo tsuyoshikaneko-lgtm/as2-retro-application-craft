@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>sample.swf</title>
+
+  <!-- sample.swf -->
+  <!-- Change sample.swf, --stage-width, --stage-height, and object width/height to match the published SWF. -->
+  <!-- Default below assumes a mobile-contained 390x640 Stage. -->
+  <!-- Flash Player 8-era AS2 SWF -->
+  <!-- Ruffleで再生しています -->
+  <!-- This package does not bundle Ruffle. Put ruffle.js at ./ruffle/ruffle.js or change the path below. -->
+  <!-- Serving notes: the host MUST serve .wasm as application/wasm; file:// will not work (CORS/wasm). -->
+  <!-- During iteration, cache-bust the SWF (and ruffle.js) with a ?v=YYYYMMDD query so stale bytes are not served. -->
+  <!-- For sound, autoplay is gated by the browser; keep first sound behind a user gesture. If the SWF has audio, prefer unmuteOverlay:"visible". -->
+
+  <script>
+    window.RufflePlayer = window.RufflePlayer || {};
+    (function () {
+      var debug = new URLSearchParams(window.location.search).get("debug") == "1";
+      window.RufflePlayer.config = {
+        ...(window.RufflePlayer.config || {}),
+        autoplay: "on",
+        unmuteOverlay: "hidden",
+        letterbox: "on",
+        scale: "showAll",
+        forceScale: true,
+        salign: "TL",
+        forceAlign: true,
+        contextMenu: "rightClickOnly",
+        warnOnUnsupportedContent: true,
+        logLevel: debug ? "debug" : "warn"
+      };
+    }());
+  </script>
+  <script>
+    // Load vendored Ruffle. If ./ruffle/ruffle.js is missing, surface it instead
+    // of silently showing a blank box. For an archival release, vendor Ruffle and
+    // (optionally) pin a CDN version like https://unpkg.com/@ruffle-rs/ruffle@<version>/ruffle.js.
+    (function () {
+      var s = document.createElement("script");
+      s.src = "./ruffle/ruffle.js";
+      s.async = false;
+      s.onerror = function () {
+        console.warn("[wrapper] ./ruffle/ruffle.js not found. Vendor Ruffle under ./ruffle/ or set a pinned CDN URL.");
+        var n = document.getElementById("ruffle-missing");
+        if (n) n.style.display = "block";
+      };
+      document.head.appendChild(s);
+    }());
+  </script>
+  <style>
+    :root {
+      --stage-width: 390;
+      --stage-height: 640;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      color: #000;
+      font-family: "MS Gothic", "Osaka", monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      text-align: center;
+    }
+
+    .wrap {
+      display: inline-block;
+      text-align: left;
+      margin: 18px auto 32px;
+      max-width: 100%;
+      box-sizing: border-box;
+      padding: 0 10px;
+    }
+
+    h1 {
+      font-size: 16px;
+      font-weight: normal;
+      margin: 0 0 10px;
+    }
+
+    .swfbox {
+      width: min(calc(var(--stage-width) * 1px), calc(100vw - 20px));
+      aspect-ratio: var(--stage-width) / var(--stage-height);
+      border: 1px solid #000;
+      background: #fff;
+      overflow: hidden;
+      /* touch-action:none suits a game (stops scroll/zoom over the stage).
+         For a scrollable non-game artifact (gallery, diagnostic), remove it. */
+      touch-action: none;
+    }
+
+    .swfbox object,
+    .swfbox embed,
+    .swfbox ruffle-player {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .note {
+      font-size: 12px;
+      margin-top: 10px;
+    }
+
+    .footer {
+      font-size: 11px;
+      margin-top: 18px;
+    }
+
+    a {
+      color: #00e;
+    }
+
+    @media (min-width: 760px) {
+      .wrap {
+        margin-top: 42px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>sample.swf</h1>
+
+    <div class="swfbox">
+      <!-- Keep width/height equal to the SWF Stage size, even though CSS scales the box on mobile. -->
+      <!-- The <param>s below are Flash Player fallback hints; Ruffle ignores them and uses RufflePlayer.config above. -->
+      <!-- During iteration, append a cache-buster, e.g. data="sample.swf?v=20260618". -->
+      <object data="sample.swf" type="application/x-shockwave-flash" width="390" height="640" aria-label="sample.swf (AS2 / Ruffle)">
+        <param name="movie" value="sample.swf">
+        <param name="quality" value="high">
+        <param name="scale" value="showall">
+        <param name="salign" value="tl">
+        <p>swfを再生できませんでした。</p>
+      </object>
+    </div>
+    <p id="ruffle-missing" style="display:none; font-size:12px; color:#a00;">
+      Ruffle (ruffle.js) が見つかりません。./ruffle/ を配置してください。
+    </p>
+
+    <div class="note">
+      おすと反応します。<br>
+      音が出る場合があります。
+    </div>
+
+    <div class="footer">
+      ver.1.00 / AS2 / Ruffle<br>
+      last update : 2026.06.17
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,7 @@
+interface:
+  display_name: "AS2 SWF Debug"
+  short_description: "Build, publish, and debug AS2 SWFs"
+  default_prompt: "Use $as2-swf-debug-pipeline to compile, publish, or debug an ActionScript 2.0 SWF through Ruffle."
+
+policy:
+  allow_implicit_invocation: true

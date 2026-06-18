@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#ffffff"/>
+  <rect x="2" y="2" width="60" height="60" fill="none" stroke="#000000" stroke-width="2"/>
+  <text x="32" y="28" text-anchor="middle" font-family="monospace" font-size="12" fill="#000000">⊂二</text>
+  <text x="32" y="44" text-anchor="middle" font-family="monospace" font-size="12" fill="#000000">＾ω＾</text>
+</svg>
