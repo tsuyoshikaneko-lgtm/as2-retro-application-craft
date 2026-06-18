@@ -245,8 +245,9 @@ The burst phase should be visually obvious: larger text, longer comments, and mo
 Wave difficulty is speed-led:
 
 ```text
-speed scale = min(1.55, 1.00 + waveIndex * 0.08)
+speed scale = min(1.60, 1.00 + waveIndex * 0.12)
 spawn spacing is phase-based, not aggressively compressed by wave
+status text shows the current speed multiplier as SPD xN.NN
 ```
 
 ## 14. Scoring

@@ -483,7 +483,7 @@ class BoonThreader {
     }
 
     function waveSpeedScale():Number {
-        return Math.min(1.55, 1 + waveIndex * 0.08);
+        return Math.min(1.60, 1 + waveIndex * 0.12);
     }
 
     function currentObstacleSpeed():Number {
@@ -494,8 +494,15 @@ class BoonThreader {
         return base * waveSpeedScale();
     }
 
+    function speedLabel():String {
+        var n:Number = Math.round(waveSpeedScale() * 100);
+        var whole:Number = Math.floor(n / 100);
+        var frac:Number = n - whole * 100;
+        return "x" + String(whole) + "." + (frac < 10 ? "0" : "") + String(frac);
+    }
+
     function waveStatus():String {
-        return "WAVE " + String(waveIndex + 1) + " / " + phaseLabel();
+        return "WAVE " + String(waveIndex + 1) + " / " + phaseLabel() + "  SPD " + speedLabel();
     }
 
     function showStatus(value:String, frames:Number):Void {
@@ -524,7 +531,7 @@ class BoonThreader {
             phaseIndex = 0;
             waveIndex++;
             wavePassed = 0;
-            showStatus("WAVE CLEAR  SPEED UP", 58);
+            showStatus("WAVE CLEAR  SPD " + speedLabel(), 58);
         } else {
             showStatus(waveStatus(), 42);
         }
