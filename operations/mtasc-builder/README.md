@@ -2,7 +2,7 @@
 
 ルートの `make swf` で使う、隔離された MTASC ビルド環境です。
 
-古い Flash 系ツールをホスト Mac に直接入れないために、Linux amd64 の container image を作り、その中に Debian snapshot から historical `mtasc` / `swfmill` package を SHA256 固定で入れます。
+古い Flash 系ツールをホスト Mac に直接入れないために、Linux amd64 の container image を作ります。その中で Debian snapshot から historical な `mtasc` / `swfmill` package を取得し、SHA256 で固定します。
 
 ## 使い方
 
