@@ -37,7 +37,7 @@ CLAUDE.md
   Claude Code project skills。canonical skill への symlink
 
 .agents/skills/
-  Codex repo-local compatibility skills。canonical skill への symlink
+  Codex repo-local compatibility shim。canonical skill への symlink
 
 creative/*/agents/openai.yaml
 operations/*/agents/openai.yaml
@@ -52,9 +52,9 @@ https://as2-retro-boon-threader.pages.dev/
 
 ## Install As Local Skills
 
-このリポジトリを clone したあと、必要に応じて skill ディレクトリを各エージェントの user skill ディレクトリにコピーまたは symlink してください。
+このリポジトリを clone したあと、必要に応じて canonical skill ディレクトリを各エージェントの user skill ディレクトリにコピーまたは symlink してください。
 
-Codex（user-global。リポジトリ内で作業するだけなら `.agents/skills/` の repo-local symlink も同梱しています）:
+Codex（確実な user-global install）:
 
 ```sh
 mkdir -p ~/.codex/skills
@@ -62,7 +62,7 @@ ln -s "$PWD/creative/as2-retro-application-craft" ~/.codex/skills/as2-retro-appl
 ln -s "$PWD/operations/as2-swf-debug-pipeline" ~/.codex/skills/as2-swf-debug-pipeline
 ```
 
-Codex の user skill パスは `$CODEX_HOME/skills`、`CODEX_HOME` 未設定時は `~/.codex/skills` です。このリポジトリには repo-local 互換用に `.agents/skills/` も置いていますが、user-global install の説明では `~/.codex/skills` を使います。
+Codex の user skill パスは `$CODEX_HOME/skills`、`CODEX_HOME` 未設定時は `~/.codex/skills` です。このリポジトリには repo-local 互換用に `.agents/skills/` も置いていますが、Codex の実行環境やバージョンによって自動探索されない場合があります。確実に使う場合は user-global install を使ってください。
 
 Claude Code:
 
@@ -72,7 +72,9 @@ ln -s "$PWD/creative/as2-retro-application-craft" ~/.claude/skills/as2-retro-app
 ln -s "$PWD/operations/as2-swf-debug-pipeline" ~/.claude/skills/as2-swf-debug-pipeline
 ```
 
-このリポジトリ内で作業する場合は user-global install は不要です。Claude Code は `.claude/skills/`、Codex 互換の repo-local 探索には `.agents/skills/` の symlink を用意しています（どちらも canonical な `creative/` `operations/` を指します）。
+このリポジトリ内で作業する場合、Claude Code は `.claude/skills/` の project skills を参照できます。Codex 向けには `.agents/skills/` の repo-local compatibility shim も用意しています（どちらも canonical な `creative/` `operations/` を指します）。
+
+symlink が使えない環境や checkout 設定では、上記の `ln -s` の代わりに `creative/as2-retro-application-craft/` と `operations/as2-swf-debug-pipeline/` を user skill ディレクトリへコピーしてください。
 
 すでに同名 skill がある場合は、既存のディレクトリを確認してから置き換えてください。
 
@@ -154,6 +156,7 @@ dist/boon-aa-threader/
 ```text
 AGENTS.md                         AIエージェント向け作業指示
 CLAUDE.md                         Claude Code向けproject memory
+CODE_OF_CONDUCT.md                参加時の最低限の行動規範
 CONTRIBUTING.md                   Issue/PR向けの最低限の案内
 LICENSE                           自作部分のライセンス
 THIRD-PARTY-NOTICES.md            フォント、Ruffle、MTASC、AA/ミーム表現の扱い
@@ -165,11 +168,15 @@ operations/mtasc-builder/
 samples/boon-aa-threader/
 ```
 
+## Questions / Support
+
+不具合、再生できない環境、skill としての使い方の提案は GitHub Issues に書いてください。Ruffle / MTASC / フォント表示の問題では、OS、ブラウザ、wrapper URL、実行したコマンド、見えている画面、console error を添えると切り分けやすくなります。
+
 ## License
 
 - 自作のコード、ドキュメント、skill定義、テンプレート、プロンプト: CC0 1.0 Universal
 - 生成される `aa-font.swf`: Noto Sans CJK JP glyphs under SIL Open Font License
 - Ruffle / MTASC / swfmill: 各 upstream project/package のライセンス
-- AA・ミーム・コメント文化: このリポジトリは権利を主張せず、文化的オマージュとして最小限に扱います。
+- AA・ミーム・コメント文化: このリポジトリは文化そのものをライセンスせず、サンプル内で文化的オマージュ/パロディとして最小限に扱います。
 
 詳細は `THIRD-PARTY-NOTICES.md` を参照してください。

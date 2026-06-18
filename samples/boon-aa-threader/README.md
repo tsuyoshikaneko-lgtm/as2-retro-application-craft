@@ -158,7 +158,7 @@ Content Security Policy が WebAssembly 実行を止めていない
 - サンプルの自作コードとドキュメント: CC0 1.0
 - 生成される `aa-font.swf`: Noto Sans CJK JP glyphs under SIL Open Font License
 - `aa-font.swf` を配布する場合: `OFL.txt` を必ず同梱
-- AA やコメント文言: 2000 年代日本語ネット文化へのファンオマージュ/パロディ。権利主張はしません。
+- AA やコメント文言: 2000 年代日本語ネット文化への文化的オマージュ/パロディ。このリポジトリは AA・ミーム・コメント文化そのものをライセンスするものではありません。
 
 詳細はリポジトリ直下の `THIRD-PARTY-NOTICES.md` を見てください。
 

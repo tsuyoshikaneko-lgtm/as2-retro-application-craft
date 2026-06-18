@@ -22,6 +22,8 @@ jobs:
         run: |
           test -f AGENTS.md
           test -f CLAUDE.md
+          test -f CODE_OF_CONDUCT.md
+          test -f CONTRIBUTING.md
           test -f creative/as2-retro-application-craft/SKILL.md
           test -f creative/as2-retro-application-craft/agents/openai.yaml
           test -f operations/as2-swf-debug-pipeline/SKILL.md

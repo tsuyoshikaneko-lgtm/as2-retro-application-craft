@@ -11,10 +11,11 @@ This repository is a Codex / Claude Code skill pack for making small retro Actio
 
 ## Agent Entrypoints
 
-- Inside this repo, both tools can reach the skills via repo-local symlinks to the canonical directories: `.claude/skills/` (Claude Code) and `.agents/skills/` (Codex-compatible repo-local layout).
+- Inside this repo, Claude Code can reach the project skills through `.claude/skills/`. `.agents/skills/` is a Codex-compatible repo-local shim for environments that support that layout; do not describe it as the canonical Codex install path.
 - For a user-global install, symlink the canonical skill directories into `~/.claude/skills/` (Claude Code) or `$CODEX_HOME/skills` / `~/.codex/skills` (Codex).
 - `CLAUDE.md` imports this file with `@AGENTS.md`; keep shared rules here and Claude-specific notes in `CLAUDE.md`.
 - `agents/openai.yaml` is Codex UI metadata. Claude ignores it; do not remove it for Claude compatibility.
+- If symlinks do not work in a user's environment, tell them to copy the canonical skill directories from `creative/` and `operations/` instead of editing files under `.claude/skills/` or `.agents/skills/`.
 
 ## Boon AA Threader Source Of Truth
 
