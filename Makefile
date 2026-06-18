@@ -19,6 +19,7 @@ swf: mtasc-builder-image
 dist: dist-demo
 
 dist-demo: swf
+	rm -rf "$(DIST_DIR)"
 	mkdir -p "$(DIST_DIR)"
 	cp "$(SWF_SAMPLE)/wrapper_cdn.html" "$(DIST_DIR)/index.html"
 	cp "$(SWF_SAMPLE)/wrapper_config.js" "$(DIST_DIR)/wrapper_config.js"
@@ -29,6 +30,7 @@ dist-demo: swf
 
 dist-selfhosted: swf
 	@test -f "$(SWF_SAMPLE)/ruffle/ruffle.js" || (echo "Place the Ruffle web package under $(SWF_SAMPLE)/ruffle/ before running make dist-selfhosted."; exit 1)
+	rm -rf "$(DIST_DIR)"
 	mkdir -p "$(DIST_DIR)"
 	cp "$(SWF_SAMPLE)/wrapper.html" "$(DIST_DIR)/index.html"
 	cp "$(SWF_SAMPLE)/wrapper_config.js" "$(DIST_DIR)/wrapper_config.js"
