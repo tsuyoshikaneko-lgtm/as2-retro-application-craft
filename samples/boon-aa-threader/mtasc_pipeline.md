@@ -54,7 +54,7 @@ Build status in this environment:
 SWF generated: yes
 output: samples/boon-aa-threader/boon-threader.swf
 font source: samples/boon-aa-threader/aa-font.swf
-verified: make swf completed through operations/mtasc-builder/
+verified: make swf completed through operations/as2-swf-debug-pipeline/scripts/mtasc-builder/
 builder mtasc: pinned Debian snapshot package
 builder swfmill: pinned Debian snapshot package
 ```
@@ -67,7 +67,7 @@ Repository build entry:
 make swf
 ```
 
-That target uses `operations/mtasc-builder/` to build inside a container. It requires Docker Desktop or Podman on the host.
+That target uses `operations/as2-swf-debug-pipeline/scripts/mtasc-builder/` to build inside a container. It requires Docker Desktop or Podman on the host.
 
 ## Recommended Pipeline
 

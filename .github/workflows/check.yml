@@ -37,6 +37,9 @@ jobs:
           test -f .agents/skills/as2-retro-application-craft/SKILL.md
           test -f .agents/skills/as2-swf-debug-pipeline/SKILL.md
 
+          test -x operations/as2-swf-debug-pipeline/scripts/build-ruffle-font-swf
+          test -f operations/as2-swf-debug-pipeline/scripts/mtasc-builder/Dockerfile
+
           unexpected="$(
             find creative/as2-retro-application-craft operations/as2-swf-debug-pipeline \
               -maxdepth 1 \( -name README.md -o -name CHANGELOG.md \) -print
@@ -46,6 +49,37 @@ jobs:
             echo "$unexpected"
             exit 1
           fi
+
+      - name: Check plugin manifests and eval cases
+        run: |
+          python3 - <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          plugin = json.loads(pathlib.Path(".claude-plugin/plugin.json").read_text())
+          market = json.loads(pathlib.Path(".claude-plugin/marketplace.json").read_text())
+          errors = []
+
+          for skill in plugin["skills"]:
+              if not (pathlib.Path(skill) / "SKILL.md").is_file():
+                  errors.append(f"plugin.json skills entry has no SKILL.md: {skill}")
+          if plugin["name"] not in [p["name"] for p in market["plugins"]]:
+              errors.append("marketplace.json does not list the plugin from plugin.json")
+
+          cases = [p for p in pathlib.Path("evals").iterdir() if p.is_dir() and p.name != "results"]
+          if not cases:
+              errors.append("evals/ has no cases")
+          for case in cases:
+              if not (case / "prompt.md").is_file():
+                  errors.append(f"{case}: missing prompt.md")
+              if not list((case / "graders").glob("*.md")):
+                  errors.append(f"{case}: needs at least one grader")
+
+          if errors:
+              print("\n".join(errors))
+              sys.exit(1)
+          PY
 
       - name: Check wrapper JavaScript syntax
         run: node --check samples/boon-aa-threader/wrapper_config.js

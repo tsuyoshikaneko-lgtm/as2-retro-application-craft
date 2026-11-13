@@ -12,6 +12,29 @@ make swfでビルドしたい
 MTASCを使った配布パイプラインを作りたい
 ```
 
+## Contents
+
+- [0. Decide Whether MTASC Is The Right Lane](#0-decide-whether-mtasc-is-the-right-lane)
+- [1. Recommended Repository Shape](#1-recommended-repository-shape)
+- [2. Isolated MTASC Builder](#2-isolated-mtasc-builder)
+- [3. Direct MTASC Command](#3-direct-mtasc-command)
+- [4. MTASC-Friendly AS2 Rules](#4-mtasc-friendly-as2-rules)
+- [5. Ruffle Wrapper](#5-ruffle-wrapper)
+- [6. Japanese AA / Font Source SWF](#6-japanese-aa--font-source-swf)
+- [7. Display Verification / Fixture States](#7-display-verification--fixture-states)
+- [8. Publish Checklist](#8-publish-checklist)
+- [9. Common MTASC Compile Errors](#9-common-mtasc-compile-errors)
+  - [Class not found](#class-not-found)
+  - [No visible output](#no-visible-output)
+  - [Runtime works in preview but not in Ruffle](#runtime-works-in-preview-but-not-in-ruffle)
+  - [Immediate game over / impossible game](#immediate-game-over--impossible-game)
+- [10. Common Operational Failures](#10-common-operational-failures)
+  - [Source archive is not the MTASC executable](#source-archive-is-not-the-mtasc-executable)
+  - [Wrapper keeps showing the old SWF](#wrapper-keeps-showing-the-old-swf)
+  - [Old screen text remains over gameplay](#old-screen-text-remains-over-gameplay)
+  - [Random output hides display bugs](#random-output-hides-display-bugs)
+- [11. Release Handoff](#11-release-handoff)
+
 ## 0. Decide Whether MTASC Is The Right Lane
 
 MTASC is appropriate when:
@@ -59,11 +82,10 @@ Use this structure:
 ```text
 repo/
   Makefile
-  operations/
+  tools/
     mtasc-builder/
-      Dockerfile
-      README.md
-      build-ruffle-font-swf        optional
+      Dockerfile                   copied from this skill's scripts/mtasc-builder/
+    build-ruffle-font-swf          optional, copied from this skill's scripts/
   samples/
     my-swf/
       wrapper.html
@@ -91,7 +113,7 @@ swf: mtasc-builder-image
 	@test -f "$(SWF_SAMPLE)/my-swf.swf"
 
 mtasc-builder-image: check-container-runtime
-	$(RUNTIME) build --platform $(MTASC_PLATFORM) -t $(MTASC_BUILDER_IMAGE) operations/mtasc-builder
+	$(RUNTIME) build --platform $(MTASC_PLATFORM) -t $(MTASC_BUILDER_IMAGE) tools/mtasc-builder
 
 check-container-runtime:
 	@if [ -z "$(RUNTIME)" ]; then \
@@ -125,28 +147,14 @@ clean:
 
 Use a container because MTASC is old and usually absent from current package managers.
 
-Minimal `operations/mtasc-builder/Dockerfile`:
+Copy the bundled builder from this skill into the repository rather than retyping it:
 
-```dockerfile
-FROM --platform=linux/amd64 debian:bookworm-slim
-
-ARG MTASC_DEB_URL=https://snapshot.debian.org/archive/debian/20130611T160143Z/pool/main/m/mtasc/mtasc_1.14-3_amd64.deb
-ARG MTASC_DEB_SHA256=86210e92dd51790c910b36d52f5075e35624833963a91f82deb9d83d3be4d782
-
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates curl make zlib1g \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN curl -fsSL "$MTASC_DEB_URL" -o /tmp/mtasc.deb \
-    && echo "$MTASC_DEB_SHA256  /tmp/mtasc.deb" | sha256sum -c - \
-    && dpkg -i /tmp/mtasc.deb \
-    && rm -f /tmp/mtasc.deb \
-    && test -x /usr/bin/mtasc \
-    && test -d /usr/share/mtasc/std \
-    && test -d /usr/share/mtasc/std8
-
-WORKDIR /work
+```sh
+mkdir -p tools
+cp -R <skill-dir>/scripts/mtasc-builder tools/mtasc-builder
 ```
+
+`<skill-dir>` is the directory that contains this skill's `SKILL.md`. The [Dockerfile](../scripts/mtasc-builder/Dockerfile) pins the Debian base image by digest and fetches MTASC 1.14 and swfmill 0.3.6 from snapshot.debian.org with SHA256 checks. Keep those pins when editing it; an unpinned legacy package is the usual reason an old build stops reproducing.
 
 Run:
 
@@ -323,31 +331,30 @@ wrapper uses cache-busted SWF/font-source paths during iteration
 
 If the SWF uses Japanese or AA in AS2 TextFields, Ruffle Web may not render glyphs correctly with device fonts.
 
-Add `swfmill` to the builder and generate a font-source SWF.
+The bundled builder image already contains `swfmill`. Generate a font-source SWF with the bundled script, inside the builder container:
 
-Builder additions:
+```sh
+cp <skill-dir>/scripts/build-ruffle-font-swf tools/build-ruffle-font-swf
+tools/build-ruffle-font-swf aa-font.swf mtasc/src/MyApp.as
+```
 
-```dockerfile
-ARG SWFMILL_DEB_URL=https://snapshot.debian.org/archive/debian/20190807T225524Z/pool/main/s/swfmill/swfmill_0.3.6-1%2Bb1_amd64.deb
-ARG SWFMILL_DEB_SHA256=f42afba04e89158ed1a81e4234374bf4444abc8c40013cac20b8a25a571ca46e
+Arguments are the output SWF followed by every source file whose text must render (AS2 classes, frame scripts, copy files). The script downloads Noto Sans CJK JP from a pinned commit, checks its SHA256, and embeds each printable character found in those files plus a base ASCII set.
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        ca-certificates curl libfreetype6 libpng16-16 libxml2 libxslt1.1 make zlib1g \
-    && rm -rf /var/lib/apt/lists/*
+Wire it into the sample `mtasc/Makefile` so the font rebuilds whenever the text changes:
 
-RUN curl -fsSL "$SWFMILL_DEB_URL" -o /tmp/swfmill.deb \
-    && echo "$SWFMILL_DEB_SHA256  /tmp/swfmill.deb" | sha256sum -c - \
-    && dpkg -i /tmp/swfmill.deb \
-    && rm -f /tmp/swfmill.deb \
-    && test -x /usr/bin/swfmill
+```make
+FONT_OUT=aa-font.swf
+FONT_BUILDER=../../tools/build-ruffle-font-swf
+
+$(FONT_OUT): $(FONT_BUILDER) $(SRC)
+	$(FONT_BUILDER) $(FONT_OUT) $(SRC)
 ```
 
 Use redistributable fonts, for example Noto Sans CJK JP under the SIL Open Font License. Do not embed proprietary Mac/Windows system fonts in a distributable package. When you redistribute a font-source SWF, ship the font's license text (for OFL fonts, `OFL.txt`) next to it.
 
-Prefer deriving the glyph list from the artifact's source string literals rather than hand-maintaining it. A hand-kept `glyphs="..."` silently drops glyphs whenever new text is added; the sample builder `operations/mtasc-builder/build-ruffle-font-swf` derives the set from `BoonThreader.as` / `frame_scripts.as` so coverage cannot drift.
+Prefer deriving the glyph list from the artifact's source string literals rather than hand-maintaining it. A hand-kept `glyphs="..."` silently drops glyphs whenever new text is added; the bundled [build-ruffle-font-swf](../scripts/build-ruffle-font-swf) derives the set from the source files it is given, so coverage cannot drift.
 
-Minimal font XML (illustrative; the sample builder generates this glyph set from source):
+Minimal font XML (illustrative; this is what the bundled script generates, with the glyph set taken from source):
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>

@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: stale-swf-isolated-by-layer
+expected_outcome: |
+  生成された SWF そのものが新しいかを先に確かめ、次に wrapper が指すパスとキャッシュ対策を見る。ゲームのコードを書き直す提案はしない。

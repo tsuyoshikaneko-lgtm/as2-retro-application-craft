@@ -17,11 +17,14 @@ samples/boon-aa-threader/
   skill pack の参照実装として用意した、AS2 / MTASC / Ruffle で実際に動く AA 弾幕ゲーム
 ```
 
-補助ツール:
+skill に同梱している補助ツール:
 
 ```text
-operations/mtasc-builder/
+operations/as2-swf-debug-pipeline/scripts/mtasc-builder/
   古い MTASC / swfmill をホスト環境に直接入れずに使うための隔離ビルド環境
+
+operations/as2-swf-debug-pipeline/scripts/build-ruffle-font-swf
+  渡したソースの文字から Ruffle 用の font-source SWF を作るスクリプト
 ```
 
 エージェント連携:
@@ -39,6 +42,12 @@ CLAUDE.md
 .agents/skills/
   Codex repo-local compatibility shim。canonical な skill ディレクトリへの symlink
 
+.claude-plugin/
+  Claude Code plugin / marketplace のマニフェスト。plugin 名は as2-retro
+
+evals/
+  claude plugin eval で回す評価ケース（依頼文と合否条件）
+
 creative/*/agents/openai.yaml
 operations/*/agents/openai.yaml
   Codex skill ごとの UI metadata / invocation policy（Claude は無視）
@@ -50,9 +59,26 @@ https://as2-retro-boon-threader.pages.dev/
 
 サンプルは `⊂二二二（＾ω＾）二⊃` が弾幕コメントを避ける、スマホ向けのワンボタン AS2/SWF ゲームです。
 
+## Install As A Claude Code Plugin
+
+Claude Code では、clone せずに plugin として入れられます。Claude Code のセッション内で実行します。
+
+```text
+/plugin marketplace add tsuyoshikaneko-lgtm/as2-retro-application-craft
+/plugin install as2-retro@as2-retro-application-craft
+```
+
+Claude Code 2.1.275 以降なら 1 行でも入ります。
+
+```text
+/plugin install as2-retro --marketplace tsuyoshikaneko-lgtm/as2-retro-application-craft
+```
+
+plugin 経由で入れた skill は `as2-retro:as2-retro-application-craft` と `as2-retro:as2-swf-debug-pipeline` という名前になります。隔離ビルダーとフォント生成スクリプトは skill の `scripts/` に同梱しているので、別のリポジトリでもそのまま使えます。
+
 ## Install As Local Skills
 
-このリポジトリを clone したあと、必要に応じて canonical skill ディレクトリを各エージェントの user skill ディレクトリにコピーまたは symlink してください。
+plugin を使わない場合や Codex で使う場合は、このリポジトリを clone したあと、必要に応じて canonical skill ディレクトリを各エージェントの user skill ディレクトリにコピーまたは symlink してください。
 
 Codex（推奨: user-global install）:
 
@@ -164,7 +190,6 @@ Makefile                          sample build / dist / local server
 
 creative/as2-retro-application-craft/
 operations/as2-swf-debug-pipeline/
-operations/mtasc-builder/
 samples/boon-aa-threader/
 ```
 
