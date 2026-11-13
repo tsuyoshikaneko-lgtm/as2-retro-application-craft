@@ -1,0 +1,11 @@
+{
+  "name": "as2-retro-application-craft",
+  "owner": { "name": "tsuyoshikaneko-lgtm" },
+  "plugins": [
+    {
+      "name": "as2-retro",
+      "source": "./",
+      "description": "Design, build, and debug small retro ActionScript 2.0 / Flash 8 SWF applications played through Ruffle."
+    }
+  ]
+}

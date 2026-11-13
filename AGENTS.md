@@ -6,7 +6,7 @@ This repository is a Codex / Claude Code skill pack for making small retro Actio
 
 - `creative/as2-retro-application-craft/` is for artifact design, AS2-era authoring memory, prompts, review rubrics, and templates.
 - `operations/as2-swf-debug-pipeline/` is for MTASC builds, SWF publish, Ruffle wrappers, cache, fonts, and runtime debugging.
-- `operations/mtasc-builder/` is the isolated legacy toolchain. Do not install old MTASC tooling on the host unless the user explicitly asks.
+- `operations/as2-swf-debug-pipeline/scripts/` holds the isolated legacy toolchain (`mtasc-builder/`) and the font-source builder (`build-ruffle-font-swf`). They ship inside the skill so it works when installed outside this repository. Do not install old MTASC tooling on the host unless the user explicitly asks.
 - `samples/` contains concrete working artifacts.
 
 ## Agent Entrypoints
@@ -14,6 +14,9 @@ This repository is a Codex / Claude Code skill pack for making small retro Actio
 - Inside this repo, Claude Code can reach the project skills through `.claude/skills/`. `.agents/skills/` is a Codex-compatible repo-local shim for environments that support that layout; do not describe it as the canonical Codex install path.
 - For a user-global install, symlink the canonical skill directories into `~/.claude/skills/` (Claude Code) or `$CODEX_HOME/skills` / `~/.codex/skills` (Codex).
 - `CLAUDE.md` imports this file with `@AGENTS.md`; keep shared rules here and Claude-specific notes in `CLAUDE.md`.
+- `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` publish this repository as the Claude Code plugin `as2-retro`. The manifest's `skills` array points at the canonical directories under `creative/` and `operations/`; do not move or copy the skills into a top-level `skills/` directory. After changing either manifest or a skill's frontmatter, run `claude plugin validate .`.
+- Skills refer to each other by skill name, never by a repository-relative path, because they are installed as siblings outside this repository.
+- `evals/` holds `claude plugin eval` cases (one directory per case: `prompt.md`, `case.yaml`, `graders/`). Running them starts real, billed model sessions, so run them deliberately (`claude plugin eval . --case <name>`), not as part of every check. `evals/results/` is generated and ignored. `creative/as2-retro-application-craft/evals/prompts.csv` is the separate trigger / no-trigger query list for tuning skill descriptions.
 - `agents/openai.yaml` is Codex UI metadata. Claude ignores it; do not remove it for Claude compatibility.
 - If symlinks do not work in a user's environment, tell them to copy the canonical skill directories from `creative/` and `operations/` instead of editing files under `.claude/skills/` or `.agents/skills/`.
 
@@ -60,7 +63,7 @@ Use `wrapper_cdn.html` for quick demos/previews and `wrapper.html` for archival/
 - Do not commit generated `.swf` files. Build them with `make swf` locally or in CI, then deploy the generated static files to the demo host.
 - Use `make dist-demo` (also the default `make dist`) for the CDN-backed public demo. Use `make dist-selfhosted` only after vendoring the Ruffle web package under the sample.
 - Change wrapper cache busters, Ruffle settings, and FlashVars forwarding only in `wrapper_config.js`.
-- If gameplay copy, AA, or Japanese glyph coverage changes, rebuild both `boon-threader.swf` and `aa-font.swf`. The font glyph set is derived automatically from the source string literals in `BoonThreader.as` and `frame_scripts.as` by `operations/mtasc-builder/build-ruffle-font-swf`, so new comment strings get their glyphs without hand-editing a glyph list — but you must rerun `make swf` so `aa-font.swf` picks them up.
+- If gameplay copy, AA, or Japanese glyph coverage changes, rebuild both `boon-threader.swf` and `aa-font.swf`. The font glyph set is derived automatically from the source string literals in `BoonThreader.as` and `frame_scripts.as` by `operations/as2-swf-debug-pipeline/scripts/build-ruffle-font-swf` (the sample `mtasc/Makefile` passes those two files to it), so new comment strings get their glyphs without hand-editing a glyph list — but you must rerun `make swf` so `aa-font.swf` picks them up.
 - Keep `BoonThreader.as` and `frame_scripts.as` behaviorally equivalent when changing controls, waves, collision, copy, or state transitions. Two deliberate lane differences are allowed and must be kept in sync: (1) sound exists only in the Flash IDE lane (`frame_scripts.as`); the MTASC build is silent. (2) the SharedObject key must be identical in both (`boon_threader_v1`).
 - Keep wrappers plain. They are SWF placement surfaces, not landing pages.
 - When deploying the sample, ship `OFL.txt` alongside the generated `aa-font.swf`. The font glyphs are redistributed under the SIL Open Font License and the license text must travel with them. See root `LICENSE` and `THIRD-PARTY-NOTICES.md`.

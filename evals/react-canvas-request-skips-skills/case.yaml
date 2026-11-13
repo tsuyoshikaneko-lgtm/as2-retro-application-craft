@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: react-canvas-request-skips-skills
+expected_outcome: |
+  React と Canvas での構成を返す。AS2 や SWF、Ruffle の成果物に置き換えない。

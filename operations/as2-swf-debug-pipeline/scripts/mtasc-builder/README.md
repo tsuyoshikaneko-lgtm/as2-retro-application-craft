@@ -1,6 +1,6 @@
 # MTASC Builder
 
-ルートの `make swf` で使う、隔離された MTASC ビルド環境です。
+`as2-swf-debug-pipeline` skill に同梱している、隔離された MTASC ビルド環境です。このリポジトリではルートの `make swf` が使います。別のリポジトリで使うときは、このディレクトリと `../build-ruffle-font-swf` をコピーしてください。
 
 古い Flash 系ツールをホスト Mac に直接入れないために、Linux amd64 の container image を作ります。その中で Debian snapshot から historical な `mtasc` / `swfmill` package を取得し、SHA256 で固定します。
 

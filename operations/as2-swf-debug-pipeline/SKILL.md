@@ -2,6 +2,8 @@
 name: as2-swf-debug-pipeline
 description: >
   Use for compiling, publishing, inspecting, and debugging ActionScript 2.0 / Flash 8 SWF artifacts, especially MTASC-built code-only SWFs played through Ruffle. Focus on deterministic local builds, isolated legacy toolchains, SWF artifact inspection, Ruffle wrapper checks, font-source SWFs for Japanese/AA TextFields, browser smoke tests, cache-busting, and root-cause isolation. Do not use for designing the retro application concept itself; use this after an AS2/SWF artifact exists or when build/publish/debug behavior is the task.
+license: CC0-1.0
+compatibility: Needs make plus Docker or Podman for the isolated linux/amd64 MTASC and swfmill builder, network access to fetch the pinned packages, and a browser running Ruffle for smoke tests.
 ---
 
 # AS2 SWF Debug Pipeline
@@ -19,11 +21,7 @@ Do the representative visual states render correctly?
 Can a human play the current build without stale cache or hidden runtime faults?
 ```
 
-For application concept, Flash-era authenticity, or mobile interaction design, use the companion creative skill first:
-
-```text
-../../creative/as2-retro-application-craft/
-```
+For application concept, Flash-era authenticity, or mobile interaction design, use the companion creative skill, `as2-retro-application-craft`, first. Refer to it by skill name; the two skills are siblings wherever they are installed.
 
 ## Core Rule
 
@@ -45,7 +43,7 @@ At each layer, collect one concrete signal before moving to the next layer.
 
 ## Reference Selection
 
-Read `references/01_mtasc_publish_howto.md` when the task involves any of:
+Read [references/01_mtasc_publish_howto.md](references/01_mtasc_publish_howto.md) when the task involves any of:
 
 ```text
 MTASC publish
@@ -88,12 +86,14 @@ Do not assume that editing `.as` changed the SWF the browser is loading.
 
 ### 2. Make The Toolchain Deterministic
 
-Prefer a repository-contained build path:
+Prefer a repository-contained build path driven by one command such as `make swf`.
 
-```text
-make swf
-operations/mtasc-builder/
-```
+This skill bundles the builder so it does not have to be rewritten each time:
+
+- [scripts/mtasc-builder/Dockerfile](scripts/mtasc-builder/Dockerfile) — isolated linux/amd64 image with SHA256-pinned MTASC 1.14 and swfmill 0.3.6.
+- [scripts/build-ruffle-font-swf](scripts/build-ruffle-font-swf) — builds a Ruffle font-source SWF whose glyph set is derived from the source files passed to it. Run it inside the builder container.
+
+If the target repository has no builder yet, copy both into it (for example under `tools/`) instead of pointing the build at the skill's install location. The build then keeps working for people and CI that do not have the skill installed.
 
 Pin old packages by URL and SHA256. Avoid installing old Flash-era compilers directly onto the host unless the user explicitly asks for that.
 

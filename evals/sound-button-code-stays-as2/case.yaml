@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: sound-button-code-stays-as2
+expected_outcome: |
+  AS2 のフレームスクリプトが返り、AS3 の書き方が混ざらない。音は Library の linkage ID と attachSound で鳴らし、linkage ID とインスタンス名、スクリプトを置くフレームが示される。

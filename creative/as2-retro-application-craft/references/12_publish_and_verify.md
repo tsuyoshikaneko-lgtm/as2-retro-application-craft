@@ -44,12 +44,7 @@ MTASC-compatible AS2 source plus local MTASC toolchain
 
 Use this only when the artifact can be generated from code at runtime. It is a weaker creator-memory match than Flash IDE authoring, but a stronger reproducible build path.
 
-For concrete MTASC publishing, isolated builder setup, generated SWF inspection, Ruffle font-source SWFs, cache busting, and debug handoff, use the companion operational skill:
-
-```text
-../../operations/as2-swf-debug-pipeline/
-../../operations/as2-swf-debug-pipeline/references/01_mtasc_publish_howto.md
-```
+For concrete MTASC publishing, isolated builder setup, generated SWF inspection, Ruffle font-source SWFs, cache busting, and debug handoff, use the companion operational skill, `as2-swf-debug-pipeline`, and its `references/01_mtasc_publish_howto.md`.
 
 Good fit:
 

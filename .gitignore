@@ -14,3 +14,6 @@ public/
 # Local Claude Code settings/notes.
 CLAUDE.local.md
 .claude/settings.local.json
+
+# Eval run output from `claude plugin eval`.
+evals/results/

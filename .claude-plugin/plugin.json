@@ -1,0 +1,14 @@
+{
+  "name": "as2-retro",
+  "version": "1.1.0",
+  "description": "Design small retro ActionScript 2.0 / Flash 8 SWF applications with old Flash hand-feel, then build them with MTASC and debug them through Ruffle.",
+  "author": { "name": "tsuyoshikaneko-lgtm" },
+  "homepage": "https://github.com/tsuyoshikaneko-lgtm/as2-retro-application-craft",
+  "repository": "https://github.com/tsuyoshikaneko-lgtm/as2-retro-application-craft",
+  "license": "CC0-1.0",
+  "keywords": ["actionscript", "as2", "flash", "swf", "ruffle", "mtasc", "retro"],
+  "skills": [
+    "./creative/as2-retro-application-craft",
+    "./operations/as2-swf-debug-pipeline"
+  ]
+}

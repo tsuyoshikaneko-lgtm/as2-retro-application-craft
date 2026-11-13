@@ -2,6 +2,8 @@
 name: as2-retro-application-craft
 description: >
   Use for designing, implementing, prompting, or reviewing small ActionScript 2.0 / Flash 8 / SWF applications that should feel structurally authentic to 2000s Flash authoring while being deployable through modern Ruffle wrappers, including mobile-first viewing contexts. Focus on Stage, Timeline, Library symbols, linkage IDs, instance names, registration points, frame-script placement, optional MTASC code-only builds, MovieClip behavior, onEnterFrame, hitTest, attachMovie/removeMovieClip, Button states, TextFields, SharedObject, sound linkage, fixed/contained SWF UI, plain wrapper pages, publish/Ruffle smoke checks, and memory-correct translation of Flash-era interactions to touch. Do not use for AS3, AIR, Flex, HTML5 Canvas, WebGL, React, Pixi, p5, generic retro styling without AS2/SWF implementation, or nostalgia essays without artifact design.
+license: CC0-1.0
+compatibility: Produces AS2 source, Flash IDE setup notes, and Ruffle wrapper HTML. Compiling a real SWF needs Flash 8 / Animate or the MTASC toolchain from the companion as2-swf-debug-pipeline skill. Playback assumes Ruffle.
 ---
 
 # AS2 Retro Application Craft
@@ -202,32 +204,28 @@ For mobile-first artifacts:
 
 Use these references selectively:
 
-- `references/01_operating_model_three_lenses.md` — overall creator/viewer/distribution lens.
-- `references/02_as2_authoring_core.md` — Stage, Timeline, Library, symbols, linkage, instances.
-- `references/03_flash_ide_materiality.md` — Flash IDE work-memory: registration points, layers, symbol types, sounds, masks, publish traps.
-- `references/04_ui_detail_language.md` — Flash UI details and how not to turn them into parody.
-- `references/05_implementation_constraints.md` — AS2 code constraints, lifecycle, input, sound, TextField, Ruffle concerns.
-- `references/06_design_philosophy.md` — launched SWF object philosophy and memory-correct design.
-- `references/07_viewer_environment_delta.md` — why faithful AS2 implementation is not enough under modern devices/networks.
-- `references/08_mobile_viewer_translation.md` — smartphone-first translation rules.
-- `references/09_application_archetypes.md` — app forms beyond a single recipe.
-- `references/10_review_rubric.md` — three-lens review checklist.
-- `references/11_prompting_guidelines.md` — prompting another AI/agent to generate AS2.
-- `references/12_publish_and_verify.md` — Flash IDE publish and Ruffle smoke-check workflow.
-- `references/13_tooling_boundaries.md` — Ruffle, MTASC, swfmill, and old project-generator boundaries worth preserving.
-- `assets/as2_application_skeleton.as` — generic frame-script skeleton with explicit assumptions.
-- `assets/one_button_game_loop_snippet.as` — optional game loop snippet for one-button games only.
-- `assets/application_spec_template.md` — project spec template.
-- `assets/flash_ide_setup_template.md` — Flash IDE authoring setup.
-- `assets/ruffle_wrapper_template.html` — plain mobile-aware Ruffle wrapper.
+- [references/01_operating_model_three_lenses.md](references/01_operating_model_three_lenses.md) — overall creator/viewer/distribution lens.
+- [references/02_as2_authoring_core.md](references/02_as2_authoring_core.md) — Stage, Timeline, Library, symbols, linkage, instances.
+- [references/03_flash_ide_materiality.md](references/03_flash_ide_materiality.md) — Flash IDE work-memory: registration points, layers, symbol types, sounds, masks, publish traps.
+- [references/04_ui_detail_language.md](references/04_ui_detail_language.md) — Flash UI details and how not to turn them into parody.
+- [references/05_implementation_constraints.md](references/05_implementation_constraints.md) — AS2 code constraints, lifecycle, input, sound, TextField, Ruffle concerns.
+- [references/06_design_philosophy.md](references/06_design_philosophy.md) — launched SWF object philosophy and memory-correct design.
+- [references/07_viewer_environment_delta.md](references/07_viewer_environment_delta.md) — why faithful AS2 implementation is not enough under modern devices/networks.
+- [references/08_mobile_viewer_translation.md](references/08_mobile_viewer_translation.md) — smartphone-first translation rules.
+- [references/09_application_archetypes.md](references/09_application_archetypes.md) — app forms beyond a single recipe.
+- [references/10_review_rubric.md](references/10_review_rubric.md) — three-lens review checklist.
+- [references/11_prompting_guidelines.md](references/11_prompting_guidelines.md) — prompting another AI/agent to generate AS2.
+- [references/12_publish_and_verify.md](references/12_publish_and_verify.md) — Flash IDE publish and Ruffle smoke-check workflow.
+- [references/13_tooling_boundaries.md](references/13_tooling_boundaries.md) — Ruffle, MTASC, swfmill, and old project-generator boundaries worth preserving.
+- [assets/as2_application_skeleton.as](assets/as2_application_skeleton.as) — generic frame-script skeleton with explicit assumptions.
+- [assets/one_button_game_loop_snippet.as](assets/one_button_game_loop_snippet.as) — optional game loop snippet for one-button games only.
+- [assets/application_spec_template.md](assets/application_spec_template.md) — project spec template.
+- [assets/flash_ide_setup_template.md](assets/flash_ide_setup_template.md) — Flash IDE authoring setup.
+- [assets/ruffle_wrapper_template.html](assets/ruffle_wrapper_template.html) — plain mobile-aware Ruffle wrapper.
 
 ## Companion skill handoff
 
-If the request is primarily about compiling, publishing, or debugging an already-defined SWF, hand off to the companion operational skill:
-
-```text
-../../operations/as2-swf-debug-pipeline/
-```
+If the request is primarily about compiling, publishing, or debugging an already-defined SWF, hand off to the companion operational skill, `as2-swf-debug-pipeline`. Refer to it by skill name: the two skills are siblings wherever they are installed, so a repository-relative path would break outside this repository.
 
 Use that skill for:
 
