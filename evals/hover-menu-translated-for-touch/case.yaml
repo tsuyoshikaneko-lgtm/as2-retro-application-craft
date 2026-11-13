@@ -1,4 +1,4 @@
 schema_version: "1.1"
 name: hover-menu-translated-for-touch
 expected_outcome: |
-  hover に頼らず、押した瞬間の反応と離したときの決定に置き換える。onReleaseOutside を扱い、ステージは枠に収まった SWF のままにする。
+  hover に頼らず、押した瞬間の反応と離したときの決定に置き換える。ボタンの外で離したときに決定せず、押した状態も残さない（onReleaseOutside でも、Mouse リスナーと hitTest でもよい）。ステージは枠に収まった SWF のままにする。
